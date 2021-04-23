@@ -60,8 +60,6 @@ interface TemperatureReading {
       city: 'New York'
     }
   ]
-
-  const dateTest = new Date('1/1/2021')
   ​
   function processReadings(readings: TemperatureReading[]): void {
     const temperatures: CitySummaryCollectionType = readings.reduce((prev: CitySummaryCollectionType, nxt) => {
@@ -108,4 +106,3 @@ interface TemperatureReading {
   exports.processReadings = processReadings
   exports.getTemperatureSummary = getTemperatureSummary
   exports.example = example
-  exports.dateTest = dateTest
