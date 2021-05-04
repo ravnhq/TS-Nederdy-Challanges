@@ -31,22 +31,19 @@ function filterByDate(dates: Date[]) {
 let cityTemperatureDetail: CityTemperatures[] = [];
 
 function processReadings(readings: TemperatureReading[]): void {
-  const cityNames = new Set(readings.map(reading => reading.city));
+  const cityNames = readings.map(reading => reading.city).filter((city, index, cities) => cities.indexOf(city) === index);
 
-  cityNames.forEach(c => {
+  cityTemperatureDetail = cityNames.map((c: string) => {
     const cityFilter = readings.filter(reading => reading.city === c);
-    const dates = filterByDate(cityFilter.map(cityDetail => cityDetail.time));
+    const dates = filterByDate(cityFilter.map(reading => reading.time));
 
-    let arrayTemp: DateTemperature[] = [];
-    dates.forEach(d => {
-      const dateTemperature: DateTemperature = {
+    const temperatures: DateTemperature[] = dates.map(d => {
+      return {
         time: d,
         temperature: cityFilter.filter(c => c.time.toString() === d.toString()).map(c => c.temperature)
       };
-      arrayTemp.push(dateTemperature);
     });
-
-    cityTemperatureDetail = [...cityTemperatureDetail, { city: c, temperatureByDate: arrayTemp }];
+    return { city: c, temperatureByDate: temperatures };
   });
 }
 
@@ -123,5 +120,5 @@ processReadings(temp);
 getTemperatureSummary(new Date("1/1/2021"), 'Mexico');
 getTemperatureSummary(new Date("1/1/2021"), 'Utah');
 
-//exports.processReadings = processReadings
-//exports.getTemperatureSummary = getTemperatureSummary
+exports.processReadings = processReadings
+exports.getTemperatureSummary = getTemperatureSummary

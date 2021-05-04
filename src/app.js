@@ -1,28 +1,21 @@
 // example interfaces that can be use
 // TIP: the types mentioned in the interfaces must be fulfilled in order to solve the problem.
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
 function filterByDate(dates) {
     return dates.filter(function (date, index) { return dates.map(function (d) { return d.toString(); }).indexOf(date.toString()) === index; });
 }
 var cityTemperatureDetail = [];
 function processReadings(readings) {
-    var cityNames = new Set(readings.map(function (reading) { return reading.city; }));
-    cityNames.forEach(function (c) {
+    var cityNames = readings.map(function (reading) { return reading.city; }).filter(function (city, index, cities) { return cities.indexOf(city) === index; });
+    cityTemperatureDetail = cityNames.map(function (c) {
         var cityFilter = readings.filter(function (reading) { return reading.city === c; });
-        var dates = filterByDate(cityFilter.map(function (cityDetail) { return cityDetail.time; }));
-        var arrayTemp = [];
-        dates.forEach(function (d) {
-            var dateTemperature = {
+        var dates = filterByDate(cityFilter.map(function (reading) { return reading.time; }));
+        var temperatures = dates.map(function (d) {
+            return {
                 time: d,
                 temperature: cityFilter.filter(function (c) { return c.time.toString() === d.toString(); }).map(function (c) { return c.temperature; })
             };
-            arrayTemp.push(dateTemperature);
         });
-        cityTemperatureDetail = __spreadArray(__spreadArray([], cityTemperatureDetail), [{ city: c, temperatureByDate: arrayTemp }]);
+        return { city: c, temperatureByDate: temperatures };
     });
 }
 function getTemperatureSummary(date, city) {
@@ -84,5 +77,5 @@ var temp = [
 processReadings(temp);
 getTemperatureSummary(new Date("1/1/2021"), 'Mexico');
 getTemperatureSummary(new Date("1/1/2021"), 'Utah');
-//exports.processReadings = processReadings
-//exports.getTemperatureSummary = getTemperatureSummary
+exports.processReadings = processReadings;
+exports.getTemperatureSummary = getTemperatureSummary;
