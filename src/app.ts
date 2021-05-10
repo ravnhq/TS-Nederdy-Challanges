@@ -16,10 +16,7 @@ interface TemperatureSummary {
 function processReadings(readings: TemperatureReading[]): void {
   // add here your code
 }
-function getTemperatureSummary(
-  date: Date,
-  city: string,
-): void {
+function getTemperatureSummary(date: Date, city: string): void {
   //add here your code
 }
 
