@@ -16,8 +16,12 @@ interface TemperatureSummary {
 function processReadings(readings: TemperatureReading[]): void {
   // add here your code
 }
-function getTemperatureSummary(date: Date, city: string): void {
+function getTemperatureSummary(
+  date: Date,
+  city: string,
+): TemperatureSummary | null {
   //add here your code
+  return null
 }
 
 exports.processReadings = processReadings
