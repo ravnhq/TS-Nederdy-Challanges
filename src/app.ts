@@ -13,16 +13,14 @@ interface TemperatureSummary {
   average: number
 }
 
-function processReadings(readings: TemperatureReading[]): void {
+export function processReadings(readings: TemperatureReading[]): void {
   // add here your code
 }
-function getTemperatureSummary(
+
+export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
   //add here your code
   return null
 }
-
-exports.processReadings = processReadings
-exports.getTemperatureSummary = getTemperatureSummary
