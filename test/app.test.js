@@ -60,7 +60,7 @@ describe('Process information', () => {
 })
 
 describe('Temperature Summary', () => {
-  test('run function getTemperatureSummary for Utah', () => {
+  it('should get the temperature summary of Utah', () => {
     const result = getTemperatureSummary(new Date('1/2/2021'), 'Utah')
 
     expect(result).toHaveProperty('first', 10)
@@ -70,7 +70,7 @@ describe('Temperature Summary', () => {
     expect(result).toHaveProperty('average', 10.5)
   })
 
-  test('run function getTemperatureSummary for New York', () => {
+  it('should get the temperature summary of New York', () => {
     const result = getTemperatureSummary(new Date('3/12/2021'), 'New York')
 
     expect(result).toHaveProperty('first', 15)
@@ -78,5 +78,9 @@ describe('Temperature Summary', () => {
     expect(result).toHaveProperty('high', 15)
     expect(result).toHaveProperty('low', 9)
     expect(result).toHaveProperty('average', 11.25)
+  })
+
+  it('should return null if the city does not exist', () => {
+    expect(getTemperatureSummary(new Date('3/12/2021'), 'Texas')).toBe(null)
   })
 })
