@@ -1,7 +1,7 @@
-/* eslint-disable prettier/prettier */
 // example interfaces that can be use
 // TIP: the types mentioned in the interfaces must be fulfilled in order to solve the problem.
-const allData: Array<dataByTime> = [];
+// store the datas
+const allData: Array<dataByTime> = []
 
 interface TemperatureReading {
   time: Date
@@ -19,7 +19,8 @@ interface TemperatureSummary {
 
 class dataByTime implements TemperatureReading {
   public dataTemperature: Array<number> = []
-  public TSummary: ClassTSummary = new ClassTSummary(0) // I created a new Class by error not definition
+  // I created a new Class by error not definition
+  public TSummary: ClassTSummary = new ClassTSummary(0)
   constructor(
     public time: Date,
     public city: string,
@@ -34,13 +35,13 @@ class dataByTime implements TemperatureReading {
 }
 
 class ClassTSummary implements TemperatureSummary {
-  constructor(public temperature: number) {
+  constructor(temperature: number) {
     this.first = this.last = this.high = this.low = this.average = temperature
   }
   first
   last
   high
-  low: number
+  low
   average
 }
 
@@ -51,7 +52,8 @@ function existValue(data: Date) {
 
   return false
 }
-//resolving sumary
+
+//resolving y updating sumary
 function getSummary(tmpSummary: ClassTSummary, value: number): ClassTSummary {
   if (tmpSummary.first === -1) tmpSummary.first = value
   if (tmpSummary.high < value) tmpSummary.high = value
@@ -66,24 +68,26 @@ function getSummary(tmpSummary: ClassTSummary, value: number): ClassTSummary {
 export function processReadings(readings: TemperatureReading[]): void {
   for (let i = 0; i < readings.length; i++) {
     if (!existValue(readings[i].time)) {
-      // the data exists in allData
+      // if reading[i] do not exist in allData
 
       const tmpe: TemperatureReading = readings[i]
       const dataT = new dataByTime(tmpe.time, tmpe.city, tmpe.temperature)
 
       let tmpSummary = new ClassTSummary(tmpe.temperature)
-
+      //Searching other data with same time and city
       for (let j = i + 1; j < readings.length; j += 1) {
+        //Updating the dataT
         if (
           readings[j].time.getTime() === dataT.time.getTime() &&
           readings[j].city === dataT.city
         ) {
+          //Adding temperature in the array temperature of dataT
           dataT.addTmpe(readings[j].temperature)
-
+          //Updating
           tmpSummary = getSummary(tmpSummary, readings[j].temperature)
         }
       }
-
+      //get average
       tmpSummary.average = tmpSummary.average / dataT.dataTemperature.length
 
       dataT.TSummary = tmpSummary

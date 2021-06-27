@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 const { processReadings, getTemperatureSummary } = require('../dist/app')
 const example = [
   {
