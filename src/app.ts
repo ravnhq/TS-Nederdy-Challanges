@@ -13,14 +13,45 @@ interface TemperatureSummary {
   average: number
 }
 
+const summaryTemperature : {[item:string]:{[day:string]:number[]}}={};
+
+
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  for(const read of readings){
+    if(read.city in summaryTemperature){
+      if(read.time.toDateString() in summaryTemperature[read.city]){
+        summaryTemperature[read.city][read.time.toDateString()].push(read.temperature);
+      }
+      else{
+        summaryTemperature[read.city][read.time.toDateString()]= [read.temperature];
+        }
+    }
+    else{
+      summaryTemperature[read.city]={
+        [read.time.toDateString()]:[read.temperature]
+      }
+    }
+}
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
+  if(city in summaryTemperature && date.toDateString() in summaryTemperature[city])
+    {
+      let values = summaryTemperature[city][date.toDateString()];
+      let high = values.reduce((a,b) => a > b ? a : b);
+      let low = values.reduce((a,b) => a < b ? a : b);
+      const reducer = (accumulator:number, currentValue:number) => accumulator + currentValue;
+      let avrg= values.reduce(reducer)/values.length; 
+      let summary: TemperatureSummary = { 
+        first: values[0], 
+        last: values[values.length-1],
+        high:high,
+        low:low,
+        average:avrg };
+      return summary;
+    }
   return null
 }
