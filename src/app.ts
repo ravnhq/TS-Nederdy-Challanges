@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 // example interfaces that can be use
 // TIP: the types mentioned in the interfaces must be fulfilled in order to solve the problem.
 interface TemperatureReading {
@@ -13,45 +14,51 @@ interface TemperatureSummary {
   average: number
 }
 
-const summaryTemperature : {[item:string]:{[day:string]:number[]}}={};
-
+const summaryTemperature: { [item: string]: { [day: string]: number[] } } = {}
 
 export function processReadings(readings: TemperatureReading[]): void {
-  for(const read of readings){
-    if(read.city in summaryTemperature){
-      if(read.time.toDateString() in summaryTemperature[read.city]){
-        summaryTemperature[read.city][read.time.toDateString()].push(read.temperature);
+  for (const read of readings) {
+    if (read.city in summaryTemperature) {
+      if (read.time.toDateString() in summaryTemperature[read.city]) {
+        summaryTemperature[read.city][read.time.toDateString()].push(
+          read.temperature,
+        )
+      } else {
+        summaryTemperature[read.city][read.time.toDateString()] = [
+          read.temperature,
+        ]
       }
-      else{
-        summaryTemperature[read.city][read.time.toDateString()]= [read.temperature];
-        }
-    }
-    else{
-      summaryTemperature[read.city]={
-        [read.time.toDateString()]:[read.temperature]
+    } else {
+      summaryTemperature[read.city] = {
+        [read.time.toDateString()]: [read.temperature],
       }
     }
-}
+  }
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  if(city in summaryTemperature && date.toDateString() in summaryTemperature[city])
-    {
-      let values = summaryTemperature[city][date.toDateString()];
-      let high = values.reduce((a,b) => a > b ? a : b);
-      let low = values.reduce((a,b) => a < b ? a : b);
-      const reducer = (accumulator:number, currentValue:number) => accumulator + currentValue;
-      let avrg= values.reduce(reducer)/values.length; 
-      let summary: TemperatureSummary = { 
-        first: values[0], 
-        last: values[values.length-1],
-        high:high,
-        low:low,
-        average:avrg };
-      return summary;
+  if (
+    city in summaryTemperature &&
+    date.toDateString() in summaryTemperature[city]
+  ) {
+    let values = summaryTemperature[city][date.toDateString()]
+    let high = values.reduce((a, b) => (a > b ? a : b))
+    let low = values.reduce((a, b) => (a < b ? a : b))
+    let average =
+      values.reduce(
+        (acumulator: number, currentValue: number) => acumulator + currentValue,
+      ) / values.length
+    let summary: TemperatureSummary = {
+      first: values[0],
+      last: values[values.length - 1],
+      high,
+      low,
+      average,
     }
+    return summary
+  }
   return null
 }
