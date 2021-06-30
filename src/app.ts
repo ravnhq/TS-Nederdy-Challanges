@@ -7,7 +7,7 @@
 type Dictionary<K extends string, T> = Partial<Record<K, T>>
 
 const allDataTmp: { [key: number]: Dictionary<string, Array<number>> } = {}
-
+const infinite = 1000000000000
 /* const example = [
   {
     time: new Date('1/3/2021'),
@@ -102,19 +102,34 @@ export function processReadings(readings: TemperatureReading[]): void {
     }
   }
 }
+function getHightLowSum(arrayData: Array<number>) {
+  // calculation of high, low, average
+  // instead calculate three times for(Math.min,Math.max) I going do one for
+  let sumAll = 0
+  let low = infinite
+  let high = -infinite
+  for (const tmp of arrayData) {
+    if (high < tmp) high = tmp
+    if (low > tmp) low = tmp
+    sumAll += tmp
+  }
+  return [high, low, sumAll]
+}
 
 function temperatureDay(date: Date) {
   const daydata = allDataTmp[date.getTime()]
-  let previousMin = 1000000000000
-  let previousMax = -1
+  let previousMin = infinite
+  let previousMax = -infinite
 
   Object.keys(daydata).forEach((key) => {
     const value = daydata[key]
     if (typeof value === 'object') {
-      const minCity = Math.min(...value) // I think change by for
-      const maxCity = Math.max(...value)
-      if (previousMin > minCity) previousMin = minCity
-      if (previousMax < maxCity) previousMax = maxCity
+      //calculate for each city the low  and high temperature
+      //getHightLowSum return [high, low, sumAll]
+      const dataHLS = getHightLowSum(value)
+      //compare the low and highest temperature of all city
+      if (previousMax < dataHLS[0]) previousMax = dataHLS[0]
+      if (previousMin > dataHLS[1]) previousMin = dataHLS[1]
     }
   })
   console.log(`The minimal by day ${previousMin}`)
@@ -131,14 +146,16 @@ export function getTemperatureSummary(
   const datecity = allDataTmp[date.getTime()][city]
   if (typeof datecity === 'object') {
     const tam = datecity['length']
-
+    /// Get Array[high,low,sumalldata]
+    const dataHLS = getHightLowSum(datecity)
     const result: TemperatureSummary = {
       first: datecity[0],
       last: datecity[tam - 1],
-      high: Math.max(...datecity),
-      low: Math.min(...datecity),
-      average: datecity.reduce((a, b) => a + b, 0) / tam,
+      high: dataHLS[0],
+      low: dataHLS[1],
+      average: dataHLS[2] / tam,
     }
+
     return result
   }
   return null
