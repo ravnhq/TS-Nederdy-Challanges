@@ -35,7 +35,7 @@ export function getTemperatureSummary(
       average: filteredTemperatures[0].temperature,
     };
 
-    for (let i = 1; i < filteredTemperatures.length; i++) {
+    for (let i = 1; i < totalFilteredTemperatures; i++) {
       summary.high = filteredTemperatures[i].temperature > summary.high ? filteredTemperatures[i].temperature : summary.high;
       summary.low = filteredTemperatures[i].temperature < summary.low ? filteredTemperatures[i].temperature : summary.low;
       summary.average += filteredTemperatures[i].temperature;
