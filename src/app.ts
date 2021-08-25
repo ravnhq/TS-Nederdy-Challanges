@@ -36,8 +36,8 @@ export function getTemperatureSummary(
     };
 
     for (let i = 1; i < filteredTemperatures.length; i++) {
-      summary.high = summary.high < filteredTemperatures[i].temperature ? filteredTemperatures[i].temperature : summary.high;
-      summary.low = summary.low > filteredTemperatures[i].temperature ? filteredTemperatures[i].temperature : summary.low;
+      summary.high = filteredTemperatures[i].temperature > summary.high ? filteredTemperatures[i].temperature : summary.high;
+      summary.low = filteredTemperatures[i].temperature < summary.low ? filteredTemperatures[i].temperature : summary.low;
       summary.average += filteredTemperatures[i].temperature;
     }
 
