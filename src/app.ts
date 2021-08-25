@@ -5,6 +5,7 @@ interface TemperatureReading {
   temperature: number
   city: string
 }
+
 interface TemperatureSummary {
   first: number
   last: number
@@ -13,14 +14,66 @@ interface TemperatureSummary {
   average: number
 }
 
+interface ProcessedReading {
+  city: string
+  time: Date
+  readings: number[]
+}
+
+const processedReadings: ProcessedReading[] = []
+
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  readings.forEach((reading: TemperatureReading) => {
+    const city: ProcessedReading | undefined = processedReadings.find(
+      (processedReading: ProcessedReading) =>
+        processedReading.city === reading.city &&
+        processedReading.time.toDateString() === reading.time.toDateString(),
+    )
+
+    if (!city) {
+      const firstReading: ProcessedReading = {
+        city: reading.city,
+        time: reading.time,
+        readings: [reading.temperature],
+      }
+
+      processedReadings.push(firstReading)
+    } else {
+      city.readings.push(reading.temperature)
+    }
+  })
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
+  const foundCity: ProcessedReading | undefined = processedReadings.find(
+    (pr: ProcessedReading) =>
+      pr.city === city && pr.time.toDateString() === date.toDateString(),
+  )
+  if (foundCity) {
+    const temperatureSummary: TemperatureSummary = {
+      first: foundCity.readings[0],
+      last: foundCity.readings[foundCity.readings.length - 1],
+      average: 0,
+      high: -200,
+      low: 200,
+    }
+
+    temperatureSummary.average = foundCity.readings.reduce(
+      (prev: number, curr: number) => {
+        temperatureSummary.high = Math.max(temperatureSummary.high, curr)
+        temperatureSummary.low = Math.min(temperatureSummary.low, curr)
+        return prev + curr
+      },
+      0,
+    )
+
+    temperatureSummary.average /= foundCity.readings.length
+
+    return temperatureSummary
+  }
+
   return null
 }
