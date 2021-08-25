@@ -13,8 +13,10 @@ interface TemperatureSummary {
   average: number
 }
 
+const data: Array<TemperatureReading> = []
+
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  data.push(...readings);
 }
 
 export function getTemperatureSummary(
