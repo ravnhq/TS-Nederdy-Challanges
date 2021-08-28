@@ -14,23 +14,22 @@ interface TemperatureSummary {
   average: number
 }
 
-const readValues :TemperatureReading[] = [];
+const readValues: TemperatureReading[] = []
 
 export function processReadings(readings: TemperatureReading[]): void {
-  readValues.push(...readings);
+  readValues.push(...readings)
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-
   const summary: TemperatureSummary = {
     first: 0,
     last: 0,
     high: 0,
     low: 0,
-    average: 0
+    average: 0,
   }
 
   const filteredValues = readValues.filter(
@@ -39,22 +38,23 @@ export function getTemperatureSummary(
   )
 
   const filteredValuesLength: number = filteredValues.length
-  const temperatureArray: number[] = [];
+  const temperatureArray: number[] = []
 
   if (filteredValuesLength > 0) {
     summary.first = filteredValues[0].temperature
     summary.last = filteredValues[filteredValuesLength - 1].temperature
 
     for (let i = 0; i < filteredValues.length; i++) {
-      temperatureArray.push(filteredValues[i].temperature);
+      temperatureArray.push(filteredValues[i].temperature)
     }
 
-    summary.high = Math.max(...temperatureArray);
-    summary.low = Math.min(...temperatureArray);
-    summary.average = temperatureArray.reduce((a, b) => a + b, 0) / filteredValuesLength
- 
+    summary.high = Math.max(...temperatureArray)
+    summary.low = Math.min(...temperatureArray)
+    summary.average =
+      temperatureArray.reduce((a, b) => a + b, 0) / filteredValuesLength
+
     return summary
   } else {
-    return null;
+    return null
   }
 }
