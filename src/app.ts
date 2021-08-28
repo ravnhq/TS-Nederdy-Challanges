@@ -52,7 +52,7 @@ export function getTemperatureSummary(
     summary.high = Math.max(...temperatureArray);
     summary.low = Math.min(...temperatureArray);
     summary.average = temperatureArray.reduce((a, b) => a + b, 0) / filteredValuesLength
-
+ 
     return summary
   } else {
     return null;
