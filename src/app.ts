@@ -53,28 +53,28 @@ export function getTemperatureSummary(
       processedReading.city === city &&
       processedReading.time.toDateString() === date.toDateString(),
   )
-  if (foundCity) {
-    const temperatureSummary: TemperatureSummary = {
-      first: foundCity.readings[0],
-      last: foundCity.readings[foundCity.readings.length - 1],
-      average: 0,
-      high: -Infinity,
-      low: Infinity,
-    }
-
-    const readingsSum = foundCity.readings.reduce(
-      (prev: number, curr: number) => {
-        temperatureSummary.high = Math.max(temperatureSummary.high, curr)
-        temperatureSummary.low = Math.min(temperatureSummary.low, curr)
-        return prev + curr
-      },
-      0,
-    )
-
-    temperatureSummary.average = readingsSum / foundCity.readings.length
-
-    return temperatureSummary
+  if (!foundCity) {
+    return null
   }
 
-  return null
+  const temperatureSummary: TemperatureSummary = {
+    first: foundCity.readings[0],
+    last: foundCity.readings[foundCity.readings.length - 1],
+    average: 0,
+    high: -Infinity,
+    low: Infinity,
+  }
+
+  const readingsSum = foundCity.readings.reduce(
+    (prev: number, curr: number) => {
+      temperatureSummary.high = Math.max(temperatureSummary.high, curr)
+      temperatureSummary.low = Math.min(temperatureSummary.low, curr)
+      return prev + curr
+    },
+    0,
+  )
+
+  temperatureSummary.average = readingsSum / foundCity.readings.length
+
+  return temperatureSummary
 }
