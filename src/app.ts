@@ -23,9 +23,9 @@ interface ProcessedReading {
 const processedReadings: ProcessedReading[] = []
 
 export function processReadings(readings: TemperatureReading[]): void {
-  readings.forEach((reading: TemperatureReading) => {
+  readings.forEach((reading) => {
     const city: ProcessedReading | undefined = processedReadings.find(
-      (processedReading: ProcessedReading) =>
+      (processedReading) =>
         processedReading.city === reading.city &&
         processedReading.time.toDateString() === reading.time.toDateString(),
     )
@@ -49,19 +49,20 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   const foundCity: ProcessedReading | undefined = processedReadings.find(
-    (pr: ProcessedReading) =>
-      pr.city === city && pr.time.toDateString() === date.toDateString(),
+    (processedReading) =>
+      processedReading.city === city &&
+      processedReading.time.toDateString() === date.toDateString(),
   )
   if (foundCity) {
     const temperatureSummary: TemperatureSummary = {
       first: foundCity.readings[0],
       last: foundCity.readings[foundCity.readings.length - 1],
       average: 0,
-      high: -200,
-      low: 200,
+      high: -Infinity,
+      low: Infinity,
     }
 
-    temperatureSummary.average = foundCity.readings.reduce(
+    const readingsSum = foundCity.readings.reduce(
       (prev: number, curr: number) => {
         temperatureSummary.high = Math.max(temperatureSummary.high, curr)
         temperatureSummary.low = Math.min(temperatureSummary.low, curr)
@@ -70,7 +71,7 @@ export function getTemperatureSummary(
       0,
     )
 
-    temperatureSummary.average /= foundCity.readings.length
+    temperatureSummary.average = readingsSum / foundCity.readings.length
 
     return temperatureSummary
   }
