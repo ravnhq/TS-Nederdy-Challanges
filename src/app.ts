@@ -18,12 +18,7 @@ const temperatures: TemperatureReading[] = []
 
 export function processReadings(readings: TemperatureReading[]): void {
   for (const reading of readings) {
-    const readingInt: TemperatureReading = {
-      time: reading.time,
-      temperature: reading.temperature,
-      city: reading.city,
-    }
-    temperatures.push(readingInt)
+    temperatures.push(reading)
   }
   return
 }
