@@ -15,26 +15,46 @@ interface TemperatureSummary {
 
 export function processReadings(readings: TemperatureReading[]): void {
   // add here your code
-  const getDates = readings.map(({time}) => time.toDateString());
-  const filterRepeatDates = [...new Set<string>(getDates)];
-  const divideArrayByDate = filterRepeatDates.map( dateTime => {
-    return readings.filter( temperatureReading => {
-      if(temperatureReading.time.toDateString() === dateTime) {
-        return temperatureReading;
+  const getDates = readings.map(({ time }) => time.toDateString())
+  const filterRepeatDates = [...new Set<string>(getDates)]
+  const divideArrayByDate = filterRepeatDates.map((dateTime) => {
+    return readings.filter((temperatureReading) => {
+      if (temperatureReading.time.toDateString() === dateTime) {
+        return temperatureReading
       }
     })
-  });
+  })
 
-  const newArray = divideArrayByDate.map( temperatureReading => {
-    if(temperatureReading.length <= 1) {
-      return temperatureReading.find(a => a);
+  const newArray = divideArrayByDate.map((temperatureReading) => {
+    if (temperatureReading.length <= 1) {
+      return temperatureReading.find((a) => a)
     } else {
-      return temperatureReading;
+      return temperatureReading
     }
   })
-  console.log(newArray);
-    
-  // })
+
+  const arrOfTemp = newArray.map((element) => {
+    if (Array.isArray(element)) {
+      const getDate = element.map(({ time }) => time.toDateString())
+      const getTemperature = element.map(({ temperature }) => temperature)
+      const getCity = element.map(({ city }) => city)
+
+      const newGetDate = [...new Set<string>(getDate)]
+      const newGetCity = [...new Set<string>(getCity)]
+      return {
+        time: newGetDate.find((a) => a),
+        temperature: getTemperature,
+        city: newGetCity.find((a) => a),
+      }
+    } else {
+      return {
+        time: element?.time.toDateString(),
+        temperature: element?.temperature,
+        city: element?.city,
+      }
+    }
+  })
+  console.log(arrOfTemp, 'arrOfTemp')
 }
 
 export function getTemperatureSummary(
@@ -42,6 +62,7 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   //add here your code
+  // if()
   return null
 }
 
@@ -96,7 +117,7 @@ const example = [
     temperature: 16,
     city: 'New York',
   },
-];
+]
 
 processReadings(example)
 // console.log(processReadings(example))
