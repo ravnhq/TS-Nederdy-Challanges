@@ -13,54 +13,65 @@ interface TemperatureSummary {
   average: number
 }
 
-function getNewArrayOfReadings(readings: TemperatureReading[]) {
-  const getNames = readings.map(({ city }) => city)
-  const filterNames = [...new Set<string>(getNames)]
-  const getArrByNames = filterNames.map((element) => {
+function transformDate(array: any) {
+  return array.map(({ time }: any) => time.toDateString())
+}
+
+function cities(array: any) {
+  return array.map(({ city }: any) => city)
+}
+
+function setString(arr: string[]) {
+  return [...new Set<string>(arr)]
+}
+
+function findElement(array: any) {
+  return array.find((a: any) => a)
+}
+
+function processData(readings: TemperatureReading[]) {
+  const cityNames = cities(readings)
+  const reduceRepeatCities = setString(cityNames)
+  const filterArrByCities = reduceRepeatCities.map((element) => {
     return readings.filter(({ city }) => city === element)
   })
-  const filterTimeAndCity = getArrByNames.map((arr) => {
-    const getTime = arr.map(({ time }) => time.toDateString())
+  const filterArrByTimeAndCity = filterArrByCities.map((arr) => {
+    const dateTime = transformDate(arr)
 
-    const filterRepeatTime = [...new Set<string>(getTime)]
+    const filterRepeatTime = setString(dateTime)
 
-    const getFilterArr = filterRepeatTime.map((element) => {
+    const filterArrByTime = filterRepeatTime.map((element) => {
       return arr.filter(({ time }) => element === time.toDateString())
     })
 
-    return getFilterArr.map((filterArr) => {
-      const getTime = filterArr.map(({ time }) => time.toDateString())
-      const getTemperature = filterArr.map(({ temperature }) => temperature)
-      const getCity = filterArr.map(({ city }) => city)
+    return filterArrByTime.map((filterArr) => {
+      const t = transformDate(filterArr)
+      const temp = filterArr.map(({ temperature }) => temperature)
+      const arrCities = cities(filterArr)
 
-      const filterRepeatTime = [...new Set<string>(getTime)]
-      const filterRepeatCity = [...new Set<string>(getCity)]
+      const filterRepeatTime = setString(t)
+      const filterRepeatCity = setString(arrCities)
 
       return {
-        time: filterRepeatTime.find((a) => a),
-        temperature:
-          getTemperature.length <= 1
-            ? getTemperature.find((a) => a)
-            : getTemperature,
-        city: filterRepeatCity.find((a) => a),
+        time: findElement(filterRepeatTime),
+        temperature: temp.length <= 1 ? findElement(temp) : temp,
+        city: findElement(filterRepeatCity),
       }
     })
   })
 
-  return filterTimeAndCity
+  return filterArrByTimeAndCity
 }
 
 export function processReadings(readings: TemperatureReading[]): void {
-  console.log(getNewArrayOfReadings(readings))
+  console.log(processData(readings))
 }
 
-// estructuras de datos
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
-  const getData = getNewArrayOfReadings(example)
+  const getData = processData(example)
   const getArrayData = getData.map((element) => {
     return element.find(
       (readTemperature) =>

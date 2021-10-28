@@ -22,64 +22,66 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 exports.__esModule = true;
 exports.getTemperatureSummary = exports.processReadings = void 0;
-function getNewArrayOfReadings(readings) {
-    var getNames = readings.map(function (_a) {
+function transformDate(array) {
+    return array.map(function (_a) {
+        var time = _a.time;
+        return time.toDateString();
+    });
+}
+function cities(array) {
+    return array.map(function (_a) {
         var city = _a.city;
         return city;
     });
-    var filterNames = __spreadArray([], __read(new Set(getNames)));
-    var getArrByNames = filterNames.map(function (element) {
+}
+function setString(arr) {
+    return __spreadArray([], __read(new Set(arr)));
+}
+function findElement(array) {
+    return array.find(function (a) { return a; });
+}
+function processData(readings) {
+    var cityNames = cities(readings);
+    var reduceRepeatCities = setString(cityNames);
+    var filterArrByCities = reduceRepeatCities.map(function (element) {
         return readings.filter(function (_a) {
             var city = _a.city;
             return city === element;
         });
     });
-    var filterTimeAndCity = getArrByNames.map(function (arr) {
-        var getTime = arr.map(function (_a) {
-            var time = _a.time;
-            return time.toDateString();
-        });
-        var filterRepeatTime = __spreadArray([], __read(new Set(getTime)));
-        var getFilterArr = filterRepeatTime.map(function (element) {
+    var filterArrByTimeAndCity = filterArrByCities.map(function (arr) {
+        var dateTime = transformDate(arr);
+        var filterRepeatTime = setString(dateTime);
+        var filterArrByTime = filterRepeatTime.map(function (element) {
             return arr.filter(function (_a) {
                 var time = _a.time;
                 return element === time.toDateString();
             });
         });
-        return getFilterArr.map(function (filterArr) {
-            var getTime = filterArr.map(function (_a) {
-                var time = _a.time;
-                return time.toDateString();
-            });
-            var getTemperature = filterArr.map(function (_a) {
+        return filterArrByTime.map(function (filterArr) {
+            var t = transformDate(filterArr);
+            var temp = filterArr.map(function (_a) {
                 var temperature = _a.temperature;
                 return temperature;
             });
-            var getCity = filterArr.map(function (_a) {
-                var city = _a.city;
-                return city;
-            });
-            var filterRepeatTime = __spreadArray([], __read(new Set(getTime)));
-            var filterRepeatCity = __spreadArray([], __read(new Set(getCity)));
+            var arrCities = cities(filterArr);
+            var filterRepeatTime = setString(t);
+            var filterRepeatCity = setString(arrCities);
             return {
-                time: filterRepeatTime.find(function (a) { return a; }),
-                temperature: getTemperature.length <= 1
-                    ? getTemperature.find(function (a) { return a; })
-                    : getTemperature,
-                city: filterRepeatCity.find(function (a) { return a; })
+                time: findElement(filterRepeatTime),
+                temperature: temp.length <= 1 ? findElement(temp) : temp,
+                city: findElement(filterRepeatCity)
             };
         });
     });
-    return filterTimeAndCity;
+    return filterArrByTimeAndCity;
 }
 function processReadings(readings) {
-    console.log(getNewArrayOfReadings(readings));
+    console.log(processData(readings));
 }
 exports.processReadings = processReadings;
-// estructuras de datos
 function getTemperatureSummary(date, city) {
-    //add here your code
-    var getData = getNewArrayOfReadings(example);
+    var getData = processData(example);
     var getArrayData = getData.map(function (element) {
         return element.find(function (readTemperature) {
             return readTemperature.time === date.toDateString() &&
