@@ -28,10 +28,10 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   const groupReadings = temperatures.reduce(
-    (tmp: TemperatureReading | any, obj: TemperatureReading) =>
-      Object.assign(tmp, {
-        [obj.city]: (tmp[obj.city] || []).concat(obj),
-      }),
+    (tmp: any, obj: TemperatureReading) => {
+      tmp[obj.city] = [...(tmp[obj.city] || []), obj]
+      return tmp
+    },
     [],
   )
   const readFiltered = groupReadings[city]
