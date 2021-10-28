@@ -22,45 +22,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 exports.__esModule = true;
 exports.getTemperatureSummary = exports.processReadings = void 0;
-// function getNewArrayOfReadings(readings: TemperatureReading[]) {
-//   const getDates = readings.map(({ time }) => time.toDateString())
-//   const filterRepeatDates = [...new Set<string>(getDates)]
-//   const divideArrayByDate = filterRepeatDates.map((dateTime) => {
-//     return readings.filter((temperatureReading) => {
-//       if (temperatureReading.time.toDateString() === dateTime) {
-//         return temperatureReading
-//       }
-//     })
-//   })
-//   const newArray = divideArrayByDate.map((temperatureReading) => {
-//     if (temperatureReading.length <= 1) {
-//       return temperatureReading.find((a) => a)
-//     } else {
-//       return temperatureReading
-//     }
-//   })
-//   const arrOfTemp = newArray.map((element) => {
-//     if (Array.isArray(element)) {
-//       const getDate = element.map(({ time }) => time)
-//       const getTemperature = element.map(({ temperature }) => temperature)
-//       const getCity = element.map(({ city }) => city)
-//       const newGetDate = [...new Set<Date>(getDate)]
-//       const newGetCity = [...new Set<string>(getCity)]
-//       return {
-//         time: newGetDate.find((a) => a),
-//         temperature: getTemperature,
-//         city: newGetCity.find((a) => a),
-//       }
-//     } else {
-//       return {
-//         time: element?.time,
-//         temperature: element?.temperature,
-//         city: element?.city,
-//       }
-//     }
-//   })
-//   return arrOfTemp
-// }
 function getNewArrayOfReadings(readings) {
     var getNames = readings.map(function (_a) {
         var city = _a.city;
@@ -109,23 +70,16 @@ function getNewArrayOfReadings(readings) {
             };
         });
     });
-    // return filterTimeAndCity.map((element) => {
-    //   if (element.length <= 1) {
-    //     return element.find((a) => a)
-    //   } else {
-    //     return element
-    //   }
-    // });
     return filterTimeAndCity;
 }
 function processReadings(readings) {
-    return getNewArrayOfReadings(readings);
+    console.log(getNewArrayOfReadings(readings));
 }
 exports.processReadings = processReadings;
 // estructuras de datos
-function getTemperatureSummary(date, city, reading) {
+function getTemperatureSummary(date, city) {
     //add here your code
-    var getData = processReadings(reading);
+    var getData = getNewArrayOfReadings(example);
     // console.log(getData)
     var getArrayData = getData.map(function (element) {
         return element.find(function (readTemperature) {
@@ -174,42 +128,7 @@ var example = [
     {
         time: new Date('1/2/2021'),
         temperature: 10,
-        city: 'Lima'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 8,
-        city: 'Lima'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 9,
-        city: 'Lima'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 10,
-        city: 'Lima'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 10,
-        city: 'Mexico City'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 8,
-        city: 'Mexico City'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 9,
-        city: 'Mexico City'
-    },
-    {
-        time: new Date('1/2/2021'),
-        temperature: 10,
-        city: 'Mexico City'
+        city: 'Utah'
     },
     {
         time: new Date('1/2/2021'),
@@ -251,15 +170,10 @@ var example = [
         temperature: 16,
         city: 'New York'
     },
-    {
-        time: new Date('3/13/2021'),
-        temperature: 16,
-        city: 'London'
-    },
 ];
 // processReadings(example)
 // console.log(processReadings(example), 'conPro')
-console.log(getTemperatureSummary(new Date('3/13/2021'), 'London', example), 'oooo');
-getTemperatureSummary(new Date('3/13/2021'), 'London', example);
+console.log(getTemperatureSummary(new Date('1/2/2021'), 'Utah'), 'oooo');
+getTemperatureSummary(new Date('1/2/2021'), 'Utah');
 // console.log(getNewArrayOfReadingsM(example))
 // getNewArrayOfReadingsM(example)
