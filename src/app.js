@@ -22,8 +22,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 exports.__esModule = true;
 exports.getTemperatureSummary = exports.processReadings = void 0;
-function processReadings(readings) {
-    // add here your code
+function getNewArrayOfReadings(readings) {
     var getDates = readings.map(function (_a) {
         var time = _a.time;
         return time.toDateString();
@@ -48,7 +47,7 @@ function processReadings(readings) {
         if (Array.isArray(element)) {
             var getDate = element.map(function (_a) {
                 var time = _a.time;
-                return time.toDateString();
+                return time;
             });
             var getTemperature = element.map(function (_a) {
                 var temperature = _a.temperature;
@@ -68,19 +67,59 @@ function processReadings(readings) {
         }
         else {
             return {
-                time: element === null || element === void 0 ? void 0 : element.time.toDateString(),
+                time: element === null || element === void 0 ? void 0 : element.time,
                 temperature: element === null || element === void 0 ? void 0 : element.temperature,
                 city: element === null || element === void 0 ? void 0 : element.city
             };
         }
     });
-    console.log(arrOfTemp, 'arrOfTemp');
+    return arrOfTemp;
+}
+function processReadings(readings) {
+    return getNewArrayOfReadings(readings);
 }
 exports.processReadings = processReadings;
-function getTemperatureSummary(date, city) {
+// estructuras de datos
+function getTemperatureSummary(date, city, reading) {
+    var _a;
     //add here your code
-    // if()
-    return null;
+    var getData = processReadings(reading);
+    console.log(getData);
+    var filterData = getData.find(function (readTemperature) {
+        var _a;
+        return ((_a = readTemperature.time) === null || _a === void 0 ? void 0 : _a.toDateString()) === date.toDateString() &&
+            readTemperature.city === city;
+    });
+    if (((_a = filterData === null || filterData === void 0 ? void 0 : filterData.time) === null || _a === void 0 ? void 0 : _a.toDateString()) === date.toDateString() &&
+        (filterData === null || filterData === void 0 ? void 0 : filterData.city) === city) {
+        if (Array.isArray(filterData.temperature)) {
+            var first = filterData.temperature[0];
+            var last = filterData.temperature[filterData.temperature.length - 1];
+            var high = Math.max.apply(Math, __spreadArray([], __read(filterData.temperature)));
+            var low = Math.min.apply(Math, __spreadArray([], __read(filterData.temperature)));
+            var average = filterData.temperature.reduce(function (a, b) { return a + b; }) /
+                filterData.temperature.length;
+            return {
+                first: first,
+                last: last,
+                high: high,
+                low: low,
+                average: average
+            };
+        }
+        else {
+            return {
+                first: filterData.temperature,
+                last: filterData.temperature,
+                high: filterData.temperature,
+                low: filterData.temperature,
+                average: filterData.temperature
+            };
+        }
+    }
+    else {
+        return null;
+    }
 }
 exports.getTemperatureSummary = getTemperatureSummary;
 var example = [
@@ -92,7 +131,7 @@ var example = [
     {
         time: new Date('1/2/2021'),
         temperature: 10,
-        city: 'Utah'
+        city: 'Lima'
     },
     {
         time: new Date('1/2/2021'),
@@ -135,5 +174,7 @@ var example = [
         city: 'New York'
     },
 ];
-processReadings(example);
-// console.log(processReadings(example))
+// processReadings(example)
+// console.log(processReadings(example), 'conPro')
+console.log(getTemperatureSummary(new Date('1/2/2021'), 'Lima', example), 'oooo');
+getTemperatureSummary(new Date('1/2/2021'), 'Lima', example);

@@ -13,8 +13,7 @@ interface TemperatureSummary {
   average: number
 }
 
-export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+function getNewArrayOfReadings(readings: TemperatureReading[]) {
   const getDates = readings.map(({ time }) => time.toDateString())
   const filterRepeatDates = [...new Set<string>(getDates)]
   const divideArrayByDate = filterRepeatDates.map((dateTime) => {
@@ -35,11 +34,11 @@ export function processReadings(readings: TemperatureReading[]): void {
 
   const arrOfTemp = newArray.map((element) => {
     if (Array.isArray(element)) {
-      const getDate = element.map(({ time }) => time.toDateString())
+      const getDate = element.map(({ time }) => time)
       const getTemperature = element.map(({ temperature }) => temperature)
       const getCity = element.map(({ city }) => city)
 
-      const newGetDate = [...new Set<string>(getDate)]
+      const newGetDate = [...new Set<Date>(getDate)]
       const newGetCity = [...new Set<string>(getCity)]
       return {
         time: newGetDate.find((a) => a),
@@ -48,22 +47,67 @@ export function processReadings(readings: TemperatureReading[]): void {
       }
     } else {
       return {
-        time: element?.time.toDateString(),
+        time: element?.time,
         temperature: element?.temperature,
         city: element?.city,
       }
     }
   })
-  console.log(arrOfTemp, 'arrOfTemp')
+
+  return arrOfTemp
 }
 
+export function processReadings(readings: TemperatureReading[]) {
+  return getNewArrayOfReadings(readings)
+}
+
+// estructuras de datos
 export function getTemperatureSummary(
   date: Date,
   city: string,
+  reading: TemperatureReading[],
 ): TemperatureSummary | null {
   //add here your code
-  // if()
-  return null
+  const getData = processReadings(reading)
+  console.log(getData)
+  const filterData = getData.find(
+    (readTemperature) =>
+      readTemperature.time?.toDateString() === date.toDateString() &&
+      readTemperature.city === city,
+  )
+
+  if (
+    filterData?.time?.toDateString() === date.toDateString() &&
+    filterData?.city === city
+  ) {
+    if (Array.isArray(filterData.temperature)) {
+      const first = filterData.temperature[0]
+      const last = filterData.temperature[filterData.temperature.length - 1]
+      const high = Math.max(...filterData.temperature)
+      const low = Math.min(...filterData.temperature)
+      const average =
+        filterData.temperature.reduce((a, b) => a + b) /
+        filterData.temperature.length
+
+      return {
+        first,
+        last,
+        high,
+        low,
+        average,
+      }
+    } else {
+      return {
+        first: filterData.temperature,
+        last: filterData.temperature,
+        high: filterData.temperature,
+        low: filterData.temperature,
+        average: filterData.temperature,
+      }
+    }
+  } else {
+    return null
+  }
 }
 
 const example = [
@@ -75,7 +119,7 @@ const example = [
   {
     time: new Date('1/2/2021'),
     temperature: 10,
-    city: 'Utah',
+    city: 'Lima',
   },
   {
     time: new Date('1/2/2021'),
@@ -119,5 +163,10 @@ const example = [
   },
 ]
 
-processReadings(example)
-// console.log(processReadings(example))
+// processReadings(example)
+// console.log(processReadings(example), 'conPro')
+console.log(
+  getTemperatureSummary(new Date('1/2/2021'), 'Lima', example),
+  'oooo',
+)
+getTemperatureSummary(new Date('1/2/2021'), 'Lima', example)
