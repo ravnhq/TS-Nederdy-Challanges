@@ -61,7 +61,6 @@ export function getTemperatureSummary(
 ): TemperatureSummary | null {
   //add here your code
   const getData = getNewArrayOfReadings(example)
-  // console.log(getData)
   const getArrayData = getData.map((element) => {
     return element.find(
       (readTemperature) =>
@@ -155,11 +154,3 @@ const example = [
     city: 'New York',
   },
 ]
-
-// processReadings(example)
-// console.log(processReadings(example), 'conPro')
-console.log(getTemperatureSummary(new Date('1/2/2021'), 'Utah'), 'oooo')
-getTemperatureSummary(new Date('1/2/2021'), 'Utah')
-
-// console.log(getNewArrayOfReadingsM(example))
-// getNewArrayOfReadingsM(example)

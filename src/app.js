@@ -80,7 +80,6 @@ exports.processReadings = processReadings;
 function getTemperatureSummary(date, city) {
     //add here your code
     var getData = getNewArrayOfReadings(example);
-    // console.log(getData)
     var getArrayData = getData.map(function (element) {
         return element.find(function (readTemperature) {
             return readTemperature.time === date.toDateString() &&
@@ -171,9 +170,3 @@ var example = [
         city: 'New York'
     },
 ];
-// processReadings(example)
-// console.log(processReadings(example), 'conPro')
-console.log(getTemperatureSummary(new Date('1/2/2021'), 'Utah'), 'oooo');
-getTemperatureSummary(new Date('1/2/2021'), 'Utah');
-// console.log(getNewArrayOfReadingsM(example))
-// getNewArrayOfReadingsM(example)
