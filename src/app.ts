@@ -35,16 +35,12 @@ interface CallbackUpdate<T> {
   (previous: T | undefined, current: any): T
 }
 
-interface UnsafeMapI<K extends string, V> extends Modifier<K, V> {
-  keys: MapEntries<V>
-}
-
 /**
  * UnsafeMap stores values of type V given a key that extends from string.
  * TODO: Make safer the UnsafeMap class
  */
-class UnsafeMap<K extends string, V> implements UnsafeMapI<K, V> {
-  keys: MapEntries<V> = {}
+class UnsafeMap<K extends string, V> implements Modifier<K, V> {
+  protected readonly keys: MapEntries<V> = {}
 
   public getItem(key: K): V {
     return this.keys[key.toString()]
