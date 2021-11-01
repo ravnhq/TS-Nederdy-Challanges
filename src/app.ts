@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // example interfaces that can be use
 // TIP: the types mentioned in the interfaces must be fulfilled in order to solve the problem.
 interface TemperatureReading {
@@ -28,21 +27,30 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   const groupReadings = temperatures.reduce(
-    (tmp: any, obj: TemperatureReading) => {
-      tmp[obj.city] = [...(tmp[obj.city] || []), obj]
-      return tmp
+    (
+      previousTemperature: { [key: string]: TemperatureReading[] },
+      currentTemperature,
+    ) => {
+      const key = currentTemperature.city
+
+      if (!previousTemperature[key]) {
+        previousTemperature[key] = []
+      }
+      previousTemperature[key].push(currentTemperature)
+      return previousTemperature
     },
-    [],
+    {},
   )
   const readFiltered = groupReadings[city]
   if (!groupReadings[city]) {
     return null
   }
   const datedReadings = readFiltered.filter(
-    (item: TemperatureReading) => item.time.toString() === date.toString(),
+    (datedReading: TemperatureReading) =>
+      datedReading.time.toString() === date.toString(),
   )
   const temperaturesReading = datedReadings.map(
-    (item: TemperatureReading) => item.temperature,
+    (temperatureReading: TemperatureReading) => temperatureReading.temperature,
   )
   const temperatureSummary: TemperatureSummary = {
     first: temperaturesReading[0],
