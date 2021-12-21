@@ -1,4 +1,4 @@
-# TS-Nederdy-Challanges
+# TS-Nerdery-Challenges
 
 ## Steps
 
@@ -6,11 +6,11 @@
 2. Before you start making changes create a new `develop` branch (`git checkout -b develop`)
 3. Run `yarn install` in your terminar for install the dependencies
 
-## Content Chanllange
+## Content Challenge
 
-You are given a list of temperatures that ocurred for major US cities over the past week. Temperature readings were taken ad inconsistent intervals. Process the temperature readings and create a function that will retun a summary of the temperature data for a given dat. The summary should include the following information:
+You are given a list of temperatures that ocurred for major US cities over the past week. Temperature readings were taken at inconsistent intervals. Process the temperature readings and create a function that will return a summary of the temperature data for a given date. The summary should include the following information:
 
-1. Fisrt temperature reading for the day
+1. First temperature reading for the day
 2. Last temperature reading for the day
 3. Highest temperature reading for the day
 4. Lowest temperature reading for the day
@@ -22,10 +22,10 @@ Description of the two function in the file `src/app.ts`
 
 The `processReadings` function will be called once with a list temperature readings and return nothing.
 
-The `getTemperatureSummary` function will be called any number of items with a date and city, and returns the temperature summary for taht day in that city. If there is no temperature data for taht day and city, return null.
+The `getTemperatureSummary` function will be called any number of items with a date and city, and returns the temperature summary for that day in that city. If there is no temperature data for that day and city, return null.
 
-When you are finish the logic plear run the next command `yarn test` the test will return the correct answer if the functios are corrects
+When you are finish the logic please run the next command `yarn test` the test will return the correct answer if the functions are correct
 
-Recomendation: for a better performance and clean code please run the command `yarn format` and `yarn lint`
+Recommendation: for a better performance and clean code please run the command `yarn format` and `yarn lint`
 
 
