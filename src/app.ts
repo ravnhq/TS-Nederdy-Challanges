@@ -12,15 +12,30 @@ interface TemperatureSummary {
   low: number
   average: number
 }
+let data: TemperatureReading[] = []
 
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  data = [...readings]
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
-  return null
+  const temperatureByCityAndDate = data.filter((item) => {
+    return item.city === city && item.time.getTime() === date.getTime()
+  })
+  if (!temperatureByCityAndDate.length) return null
+  const temperatures = temperatureByCityAndDate.map((item) => item.temperature)
+  const avg =
+    temperatures.reduce((number1, number2) => number1 + number2) /
+    temperatures.length
+  return {
+    first: temperatureByCityAndDate[0].temperature,
+    last: temperatureByCityAndDate[temperatureByCityAndDate.length - 1]
+      .temperature,
+    high: Math.max(...temperatures),
+    low: Math.min(...temperatures),
+    average: +avg.toFixed(2),
+  }
 }
