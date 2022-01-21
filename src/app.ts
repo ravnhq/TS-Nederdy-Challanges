@@ -25,15 +25,15 @@ export function getTemperatureSummary(
   const temperatureByCityAndDate = data.filter((item) => {
     return item.city === city && item.time.getTime() === date.getTime()
   })
-  if (!temperatureByCityAndDate.length) return null
+  const temperatureLength = temperatureByCityAndDate.length
+  if (!temperatureLength) return null
   const temperatures = temperatureByCityAndDate.map((item) => item.temperature)
   const avg =
     temperatures.reduce((number1, number2) => number1 + number2) /
-    temperatures.length
+    temperatureLength
   return {
     first: temperatureByCityAndDate[0].temperature,
-    last: temperatureByCityAndDate[temperatureByCityAndDate.length - 1]
-      .temperature,
+    last: temperatureByCityAndDate[temperatureLength - 1].temperature,
     high: Math.max(...temperatures),
     low: Math.min(...temperatures),
     average: +avg.toFixed(2),
