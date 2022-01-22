@@ -13,14 +13,17 @@ interface TemperatureSummary {
   average: number
 }
 
-let summary: any
+interface TemperatureArray {
+  [key: string]: number[]
+}
+
+const summary: TemperatureArray = {}
 
 export function processReadings(readings: TemperatureReading[]): void {
-  let nameElement = ''
   readings.forEach((element: TemperatureReading) => {
-    nameElement = `${element.city + element.time.toDateString()}`
+    const nameElement = `${element.city + element.time.toDateString()}`
 
-    if (!summary[nameElement]) summary[nameElement] = []
+    summary[nameElement] ??= []
 
     summary[nameElement].push(element.temperature)
   })
@@ -30,19 +33,17 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  let nameElement = `${city + date.toDateString()}`
+  const nameElement = `${city + date.toDateString()}`
 
-  let onlyTemperatures = summary[nameElement]
+  const onlyTemperatures = summary[nameElement]
 
   if (!summary[nameElement]) return null
 
   const count = onlyTemperatures.length
 
-  let [first, ...rest] = [...onlyTemperatures]
-
   return {
-    first: first,
-    last: [...rest].pop(),
+    first: onlyTemperatures[0],
+    last: onlyTemperatures[count - 1],
     high: Math.max(...onlyTemperatures),
     low: Math.min(...onlyTemperatures),
     average:
