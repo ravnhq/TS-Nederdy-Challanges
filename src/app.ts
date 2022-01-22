@@ -13,14 +13,39 @@ interface TemperatureSummary {
   average: number
 }
 
+let summary: any
+
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  let nameElement = ''
+  readings.forEach((element: TemperatureReading) => {
+    nameElement = `${element.city + element.time.toDateString()}`
+
+    if (!summary[nameElement]) summary[nameElement] = []
+
+    summary[nameElement].push(element.temperature)
+  })
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
-  return null
+  let nameElement = `${city + date.toDateString()}`
+
+  let onlyTemperatures = summary[nameElement]
+
+  if (!summary[nameElement]) return null
+
+  const count = onlyTemperatures.length
+
+  let [first, ...rest] = [...onlyTemperatures]
+
+  return {
+    first: first,
+    last: [...rest].pop(),
+    high: Math.max(...onlyTemperatures),
+    low: Math.min(...onlyTemperatures),
+    average:
+      onlyTemperatures.reduce((acc: number, el: number) => acc + el) / count,
+  }
 }
