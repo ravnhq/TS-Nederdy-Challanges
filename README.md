@@ -24,7 +24,7 @@ The `processReadings` function will be called once with a list temperature readi
 
 The `getTemperatureSummary` function will be called any number of items with a date and city, and returns the temperature summary for taht day in that city. If there is no temperature data for taht day and city, return null.
 
-When you are finish the logic plear run the next command `yarn test` the test will return the correct answer if the functios are corrects
+When you have finished your challenge, please run the next command `yarn test` to make sure your code works as expected.
 
 Recomendation: for a better performance and clean code please run the command `yarn format` and `yarn lint`
 
