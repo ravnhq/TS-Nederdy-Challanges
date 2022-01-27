@@ -21,10 +21,8 @@ const summary: TemperatureArray = {}
 
 export function processReadings(readings: TemperatureReading[]): void {
   readings.forEach((element: TemperatureReading) => {
-    const nameElement = `${element.city + element.time.toDateString()}`
-
+    const nameElement = `${element.city}${element.time.toDateString()}`
     summary[nameElement] ??= []
-
     summary[nameElement].push(element.temperature)
   })
 }
@@ -33,19 +31,20 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  const nameElement = `${city + date.toDateString()}`
 
-  const onlyTemperatures = summary[nameElement]
+  const nameElement = `${city}${date.toDateString()}`
 
   if (!summary[nameElement]) return null
 
+  const onlyTemperatures = summary[nameElement]
   const count = onlyTemperatures.length
+  const sorted = [...onlyTemperatures].sort((a,b)=>{return a-b})
 
   return {
     first: onlyTemperatures[0],
     last: onlyTemperatures[count - 1],
-    high: Math.max(...onlyTemperatures),
-    low: Math.min(...onlyTemperatures),
+    high: sorted[count - 1],
+    low: sorted[0],
     average:
       onlyTemperatures.reduce((acc: number, el: number) => acc + el) / count,
   }
