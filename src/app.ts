@@ -37,14 +37,23 @@ export function getTemperatureSummary(
   reading.forEach(r => {
     if (r.time.getDate() === date.getDate() && r.city === city) {
       founded = true;
-      obj.first = !counter ? r.temperature : obj.first;
+      obj.first = counter > 0 ? obj.first : r.temperature;
       obj.last = r.temperature;
-      obj.high = (r.temperature > obj.high) ? r.temperature : obj.high;
-      obj.low = (!counter) ? r.temperature : ((r.temperature < obj.low) ? r.temperature : obj.low);
+      obj.high = r.temperature > obj.high ? r.temperature : obj.high;
+
+      if (counter > 0) {
+        if (r.temperature < obj.low) {
+          obj.low = r.temperature;
+        }
+      } else {
+        obj.low = r.temperature;
+      }
+
       totalTemp += r.temperature;
       counter++;
     }
   });
+
   obj.average = totalTemp / counter;
   if (founded) return obj;
 
