@@ -22,21 +22,29 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  const temperatures = [] as number[]
-  let avg = 0
+  let temperatures: number[] = []
+  let sum = 0
+
   data.forEach((item) => {
-    if (item.city === city && item.time.getTime() === item.time.getTime()) {
+    if (item.city === city && item.time.getTime() === date.getTime()) {
       temperatures.push(item.temperature)
-      avg += item.temperature
+      sum += item.temperature
     }
   })
+
   const temperaturesLength = temperatures.length
+
   if (!temperaturesLength) return null
+
+  const avg = sum / temperaturesLength
+  const first = temperatures[0]
+  const last = temperatures[temperaturesLength - 1]
+  temperatures = temperatures.sort((a, b) => a - b)
   return {
-    first: temperatures[0],
-    last: temperatures[temperaturesLength - 1],
-    high: Math.max(...temperatures),
-    low: Math.min(...temperatures),
+    first,
+    last,
+    high: temperatures[temperaturesLength - 1],
+    low: temperatures[0],
     average: +avg.toFixed(2),
   }
 }
