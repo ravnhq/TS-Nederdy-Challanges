@@ -22,8 +22,7 @@ function groupBy(objectArray: object[], property: string) {
   }, {})
 }
 
-let readingsByCityAndDate;
-let processedReadingsStorage;
+let readingsByCityAndDate
 
 function storeByCityAndDate(example) {
   readingsByCityAndDate = groupBy(example, 'city')
@@ -33,7 +32,8 @@ function storeByCityAndDate(example) {
   }
 }
 
-function processDailyReading (readingsByCityAndDate) {
+function processDailyReading(readingsByCityAndDate) {
+  processedReadingsStorage = Object.create(readingsByCityAndDate)
   for (const city in readingsByCityAndDate) {
     const cityReadings = readingsByCityAndDate[city]
     for (const date in cityReadings) {
