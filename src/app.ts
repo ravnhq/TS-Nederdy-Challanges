@@ -13,14 +13,42 @@ interface TemperatureSummary {
   average: number
 }
 
+const dataLectures: TemperatureReading[] = []
 export function processReadings(readings: TemperatureReading[]): void {
-  // add here your code
+  dataLectures.push(...readings)
 }
 
 export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  //add here your code
-  return null
+  const filterTime = dataLectures.filter(
+    (data: TemperatureReading) => data.time.getTime() === date.getTime(),
+  )
+  const filterCity = filterTime.filter(
+    (data: TemperatureReading) => data.city === city,
+  )
+  const temperatureArray: number[] = []
+
+  if (filterTime.length === 0 || filterCity.length === 0) return null
+
+  filterCity.forEach((element: TemperatureReading) =>
+    temperatureArray.push(element.temperature),
+  )
+
+  const sizeTemperatureArray = temperatureArray.length
+  const average =
+    temperatureArray.reduce(
+      (previous: number, current: number) => previous + current,
+    ) / sizeTemperatureArray
+
+  const orderedTemperature = [...temperatureArray].sort((a, b) => a - b)
+
+  return {
+    first: temperatureArray[0],
+    last: temperatureArray[sizeTemperatureArray - 1],
+    high: orderedTemperature[sizeTemperatureArray - 1],
+    low: orderedTemperature[0],
+    average: average,
+  }
 }
