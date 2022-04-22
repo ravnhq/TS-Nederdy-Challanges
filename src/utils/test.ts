@@ -57,13 +57,25 @@ type MyType = { [x: string]: TemperatureReading[] }
 
 export function groupByCity(objectArray: TemperatureReading[]) {
   return objectArray.reduce(function (accumulator: MyType, object) {
-    const key = object.city
-    if (!accumulator[key]) {
-      accumulator[key] = []
+    const groupingProperty = object.city
+    if (!accumulator[groupingProperty]) {
+      accumulator[groupingProperty] = []
     }
-    accumulator[key].push(object)
+    accumulator[groupingProperty].push(object)
+    return accumulator
+  }, {})
+}
+
+export function groupByDate(objectArray: TemperatureReading[]) {
+  return objectArray.reduce(function (accumulator: MyType, object) {
+    const groupingProperty = object.time
+    if (!accumulator[groupingProperty]) {
+      accumulator[groupingProperty] = []
+    }
+    accumulator[groupingProperty].push(object)
     return accumulator
   }, {})
 }
 
 console.log(groupByCity(example))
+console.log(groupByDate(example))
