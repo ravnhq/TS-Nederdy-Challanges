@@ -1,13 +1,23 @@
-function groupBy(objectArray, property) {
-  return objectArray.reduce(function (acc, obj) {
-    let key = obj[property]
-    if (!acc[key]) {
-      acc[key] = []
-    }
-    acc[key].push(obj)
-    return acc
-  }, {})
-}
+// function groupBy(objectArray, property) {
+//   return objectArray.reduce(function (acc, obj) {
+//     let key = obj[property]
+//     if (!acc[key]) {
+//       acc[key] = []
+//     }
+//     acc[key].push(obj)
+//     return acc
+//   }, {})
+// }
+
+// function storeByCityAndDate(example) {
+//   readingsByCityAndDate = groupBy(example, 'city')
+//   for (const city in readingsByCityAndDate) {
+//     const element = readingsByCityAndDate[city]
+//     readingsByCityAndDate[city] = groupBy(element, 'time')
+//   }
+//   console.log(readingsByCityAndDate)
+//   return readingsByCityAndDate
+// }
 
 const example = [
   {
@@ -62,13 +72,35 @@ const example = [
   },
 ]
 
-function storeByCityAndDate(example) {
-  readingsByCityAndDate = groupBy(example, 'city')
+function groupByCity(objectArray) {
+  return objectArray.reduce(function (accumulator, object) {
+    const city = object.city
+    if (!accumulator[city]) {
+      accumulator[city] = []
+    }
+    accumulator[city].push(object)
+    return accumulator
+  }, {})
+}
+
+function groupByDate(objectArray) {
+  return objectArray.reduce(function (accumulator, object) {
+    const formattedTime = object.time.toString()
+    const groupingProperty = formattedTime
+    if (!accumulator[groupingProperty]) {
+      accumulator[groupingProperty] = []
+    }
+    accumulator[groupingProperty].push(object)
+    return accumulator
+  }, {})
+}
+
+function storeByCityAndDate(readings) {
+  readingsByCityAndDate = groupByCity(readings)
   for (const city in readingsByCityAndDate) {
-    const element = readingsByCityAndDate[city]
-    readingsByCityAndDate[city] = groupBy(element, 'time')
+    const date = readingsByCityAndDate[city]
+    readingsByCityAndDate[city] = groupByDate(date)
   }
-  console.log(readingsByCityAndDate)
   return readingsByCityAndDate
 }
 
@@ -119,7 +151,7 @@ function processReadings(example) {
 
 processReadings(example)
 
-function getTemperatureSummary(city, date) {
+function getTemperatureSummary(date, city) {
   const formattedDate = date.toString()
   if (
     readingsByCityAndDate.hasOwnProperty(city) &&
@@ -131,4 +163,4 @@ function getTemperatureSummary(city, date) {
   }
 }
 
-console.log(getTemperatureSummary('Utah', new Date('1/2/2021')))
+console.log(getTemperatureSummary(new Date('1/2/2021'), 'Utah'))

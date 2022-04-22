@@ -1,27 +1,12 @@
-import { getTemperatureSummary } from '../app'
 import { TemperatureReading, TemperatureSummary } from './interfaces'
-
-// export function groupBy(
-//   objectArray: TemperatureReading[],
-//   property: keyof TemperatureReading,
-// ) {
-//   return objectArray.reduce(function (accumulator: MyType, object) {
-//     const key = object[property]
-//     if (!accumulator[key]) {
-//       accumulator[key] = []
-//     }
-//     accumulator[key].push(object)
-//     return accumulator
-//   }, {})
-// }
 
 export function groupByCity(objectArray: TemperatureReading[]) {
   return objectArray.reduce(function (accumulator: MyType, object) {
-    const key = object.city
-    if (!accumulator[key]) {
-      accumulator[key] = []
+    const city = object.city
+    if (!accumulator[city]) {
+      accumulator[city] = []
     }
-    accumulator[key].push(object)
+    accumulator[city].push(object)
     return accumulator
   }, {})
 }
@@ -38,16 +23,15 @@ export function groupByDate(objectArray: TemperatureReading[]) {
   }, {})
 }
 
-type City = { [x: string]: TemperatureReading[] }
-type Date = { [x: string]: { [x: string]: TemperatureReading[] } }
+type MyType = { [x: string]: TemperatureReading[] }
 
-let readingsByCityAndDate: City | Date
+let readingsByCityAndDate: MyType
 
 export function storeByCityAndDate(readings: TemperatureReading[]) {
   readingsByCityAndDate = groupByCity(readings)
   for (const city in readingsByCityAndDate) {
     const date = readingsByCityAndDate[city]
-    readingsByCityAndDate[city] = groupByDate()
+    readingsByCityAndDate[city] = groupByDate(date)
   }
   return readingsByCityAndDate
 }
@@ -59,7 +43,7 @@ export function processDailyReading() {
   let currentDate = ''
   Object.entries(readingsByCityAndDate).forEach(([city, dates]) => {
     currentCity = city
-    const readings = Object.values(dates)
+    const readings = Object.values(dates) // ['Utah', 'New York']
     readings.forEach((reading: any) => {
       currentDate = reading[0].time
       const temperatureSummary: TemperatureSummary = {
@@ -70,9 +54,11 @@ export function processDailyReading() {
         average: 0,
       }
       Object.keys(temperatureSummary).forEach(
-        (value) => (temperatureSummary[value] = reading[0].temperature),
+        (value) =>
+          (temperatureSummary[value as keyof typeof temperatureSummary] =
+            reading[0].temperature),
       )
-      if (reading.length > 2) {
+      if (reading.length > 1) {
         temperatureSummary.last = reading[reading.length - 1].temperature
         let total = 0
         for (let index = 0; index < reading.length; index++) {
