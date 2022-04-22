@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.getTemperatureSummary = void 0;
+exports.getTemperatureSummary = exports.processReadings = void 0;
 function groupBy(objectArray, property) {
     return objectArray.reduce(function (acc, obj) {
         var key = obj[property];
@@ -11,7 +11,6 @@ function groupBy(objectArray, property) {
         return acc;
     }, {});
 }
-var readingsByCityAndDate;
 function storeByCityAndDate(readings) {
     readingsByCityAndDate = groupBy(readings, 'city');
     for (var city in readingsByCityAndDate) {
@@ -20,7 +19,9 @@ function storeByCityAndDate(readings) {
     }
     return readingsByCityAndDate;
 }
-function processDailyReading(readingsByCityAndDate) {
+function processDailyReading() {
+    // FIX: iterating over object and modifying its properties at the same time
+    // Suggestion: create a deep copy of object to use as storage instead
     var currentCity = '';
     var currentDate = '';
     Object.entries(readingsByCityAndDate).forEach(function (_a) {
@@ -56,11 +57,13 @@ function processDailyReading(readingsByCityAndDate) {
         });
     });
 }
+var readingsByCityAndDate;
 function processReadings(readings) {
     storeByCityAndDate(readings);
-    processDailyReading(readingsByCityAndDate);
+    processDailyReading();
 }
-processReadings(readings);
+exports.processReadings = processReadings;
+// processReadings(readings)
 function getTemperatureSummary(date, city) {
     var formattedDate = date.toString();
     if (readingsByCityAndDate.hasOwnProperty(city) &&
@@ -72,3 +75,4 @@ function getTemperatureSummary(date, city) {
     }
 }
 exports.getTemperatureSummary = getTemperatureSummary;
+// console.log(getTemperatureSummary('Utah', new Date('1/2/2021')))

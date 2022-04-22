@@ -1,113 +1,133 @@
 function groupBy(objectArray, property) {
-    return objectArray.reduce(function (acc, obj) {
+  return objectArray.reduce(function (acc, obj) {
     let key = obj[property]
     if (!acc[key]) {
-        acc[key] = []
+      acc[key] = []
     }
     acc[key].push(obj)
     return acc
-    }, {})
+  }, {})
 }
 
 const example = [
-    {
-      time: new Date('1/3/2021'),
-      temperature: 8,
-      city: 'Utah',
-    },
-    {
-      time: new Date('1/2/2021'),
-      temperature: 10,
-      city: 'Utah',
-    },
-    {
-      time: new Date('1/2/2021'),
-      temperature: 9,
-      city: 'Utah',
-    },
-    {
-      time: new Date('1/2/2021'),
-      temperature: 12,
-      city: 'Utah',
-    },
-    {
-      time: new Date('1/2/2021'),
-      temperature: 11,
-      city: 'Utah',
-    },
-    {
-      time: new Date('3/12/2021'),
-      temperature: 15,
-      city: 'New York',
-    },
-    {
-      time: new Date('3/12/2021'),
-      temperature: 10,
-      city: 'New York',
-    },
-    {
-      time: new Date('3/12/2021'),
-      temperature: 11,
-      city: 'New York',
-    },
-    {
-      time: new Date('3/12/2021'),
-      temperature: 9,
-      city: 'New York',
-    },
-    {
-      time: new Date('3/13/2021'),
-      temperature: 16,
-      city: 'New York',
-    },
+  {
+    time: new Date('1/3/2021'),
+    temperature: 8,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 10,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 9,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 12,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 11,
+    city: 'Utah',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 15,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 10,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 11,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 9,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/13/2021'),
+    temperature: 16,
+    city: 'New York',
+  },
 ]
 
-let readingsByCityAndDate;
-const temperatureSummary = {};
-
 function storeByCityAndDate(example) {
-    readingsByCityAndDate = groupBy(example, 'city')
-    for (const city in readingsByCityAndDate) {
-      const element = readingsByCityAndDate[city]
-      readingsByCityAndDate[city] = groupBy(element, 'time')
-    }
+  readingsByCityAndDate = groupBy(example, 'city')
+  for (const city in readingsByCityAndDate) {
+    const element = readingsByCityAndDate[city]
+    readingsByCityAndDate[city] = groupBy(element, 'time')
+  }
+  return readingsByCityAndDate
 }
 
-function processDailyReading (readingsByCityAndDate) {
-    for (const city in readingsByCityAndDate) {
-            const cityReadings = readingsByCityAndDate[city];
-            for (const date in cityReadings) {
-                    let dailyReading = cityReadings[date];
-                    if (dailyReading.length < 2) {
-                        const { first } = temperatureSummary.first = dailyReading[0].temperature;
-                        const { last } = temperatureSummary.last = dailyReading[0].temperature;
-                        const { high } = temperatureSummary.high = dailyReading[0].temperature;
-                        const { low } = temperatureSummary.low = dailyReading[0].temperature;
-                        const { average } = temperatureSummary.average = dailyReading[0].temperature;
-                        readingsByCityAndDate[city][date] = temperatureSummary; // agregar una tercera propiedad que sea temperature summary
-                        console.log(readingsByCityAndDate);
-                    } else {
-                        // for (let index = 0; index < array.length; index++) {
-                            //         const element = array[index];
-                            //     }
-                        }    
-                    }
-                }
+function processDailyReading() {
+  let currentCity = ''
+  let currentDate = ''
+  Object.entries(readingsByCityAndDate).forEach(([city, dates]) => {
+    currentCity = city
+    const readings = Object.values(dates)
+    readings.forEach((reading) => {
+      currentDate = reading[0].time
+      const temperatureSummary = {
+        first: 0,
+        last: 0,
+        high: 0,
+        low: 0,
+        average: 0,
+      }
+      Object.keys(temperatureSummary).forEach(
+        (value) => (temperatureSummary[value] = reading[0].temperature),
+      )
+      if (reading.length > 1) {
+        temperatureSummary.last = reading[reading.length - 1].temperature
+        let total = 0
+        for (let index = 0; index < reading.length; index++) {
+          const element = reading[index]
+          total += element.temperature
+          if (element.temperature > temperatureSummary.high) {
+            temperatureSummary.high = element.temperature
+          }
+          if (element.temperature < temperatureSummary.low) {
+            temperatureSummary.low = element.temperature
+          }
+          temperatureSummary.average = total / reading.length
+        }
+      }
+      readingsByCityAndDate[currentCity][currentDate] = temperatureSummary
+    })
+  })
 }
+
+let readingsByCityAndDate
 
 function processReadings(example) {
-    storeByCityAndDate(example)
-    processDailyReading(readingsByCityAndDate)
+  storeByCityAndDate(example)
+  processDailyReading()
 }
-  
+
 processReadings(example)
 
-function getTemperatureSummary(date, city){
-    if (readingsByCityAndDate.hasOwnProperty(city) && readingsByCityAndDate.hasOwnProperty(date)) {
-        return readingsByCityAndDate[city][date];
-    } else {
-        return null;
-    }
+function getTemperatureSummary(city, date) {
+  const formattedDate = date.toString()
+  if (
+    readingsByCityAndDate.hasOwnProperty(city) &&
+    readingsByCityAndDate[city].hasOwnProperty(formattedDate)
+  ) {
+    return readingsByCityAndDate[city][formattedDate]
+  } else {
+    return null
+  }
 }
 
-console.log(readingsByCityAndDate['Utah'][new Date('1/3/2021')]);
+console.log(getTemperatureSummary('Utah', new Date('1/2/2021')))
