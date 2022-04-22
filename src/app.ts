@@ -22,15 +22,14 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  const filterTime = dataLectures.filter(
-    (data) => data.time.getTime() === date.getTime(),
+  const filterArray = dataLectures.filter(
+    (data) => data.time.getTime() === date.getTime() && data.city === city,
   )
-  const filterCity = filterTime.filter((data) => data.city === city)
+
+  if (filterArray.length === 0) return null
   const temperatureArray: number[] = []
 
-  if (filterTime.length === 0 || filterCity.length === 0) return null
-
-  filterCity.forEach((element) => temperatureArray.push(element.temperature))
+  filterArray.forEach((element) => temperatureArray.push(element.temperature))
 
   const sizeTemperatureArray = temperatureArray.length
   const average =
