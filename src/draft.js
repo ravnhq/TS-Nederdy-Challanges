@@ -68,6 +68,7 @@ function storeByCityAndDate(example) {
     const element = readingsByCityAndDate[city]
     readingsByCityAndDate[city] = groupBy(element, 'time')
   }
+  console.log(readingsByCityAndDate)
   return readingsByCityAndDate
 }
 

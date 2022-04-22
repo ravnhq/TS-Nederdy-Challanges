@@ -1,18 +1,19 @@
+import { getTemperatureSummary } from '../app'
 import { TemperatureReading, TemperatureSummary } from './interfaces'
 
-export function groupBy(
-  objectArray: TemperatureReading[],
-  property: keyof TemperatureReading,
-) {
-  return objectArray.reduce(function (accumulator: MyType, object) {
-    const key = object[property]
-    if (!accumulator[key]) {
-      accumulator[key] = []
-    }
-    accumulator[key].push(object)
-    return accumulator
-  }, {})
-}
+// export function groupBy(
+//   objectArray: TemperatureReading[],
+//   property: keyof TemperatureReading,
+// ) {
+//   return objectArray.reduce(function (accumulator: MyType, object) {
+//     const key = object[property]
+//     if (!accumulator[key]) {
+//       accumulator[key] = []
+//     }
+//     accumulator[key].push(object)
+//     return accumulator
+//   }, {})
+// }
 
 export function groupByCity(objectArray: TemperatureReading[]) {
   return objectArray.reduce(function (accumulator: MyType, object) {
@@ -25,17 +26,28 @@ export function groupByCity(objectArray: TemperatureReading[]) {
   }, {})
 }
 
-type MyType = { [x: string]: TemperatureReading[] }
-
-let readingsByCityAndDate: {
-  [x: string]: { [x: string]: TemperatureSummary }
+export function groupByDate(objectArray: TemperatureReading[]) {
+  return objectArray.reduce(function (accumulator: MyType, object) {
+    const formattedTime = object.time.getTime()
+    const groupingProperty = formattedTime
+    if (!accumulator[groupingProperty]) {
+      accumulator[groupingProperty] = []
+    }
+    accumulator[groupingProperty].push(object)
+    return accumulator
+  }, {})
 }
 
+type City = { [x: string]: TemperatureReading[] }
+type Date = { [x: string]: { [x: string]: TemperatureReading[] } }
+
+let readingsByCityAndDate: City | Date
+
 export function storeByCityAndDate(readings: TemperatureReading[]) {
-  readingsByCityAndDate = groupBy(readings, 'city')
+  readingsByCityAndDate = groupByCity(readings)
   for (const city in readingsByCityAndDate) {
-    const element = readingsByCityAndDate[city]
-    readingsByCityAndDate[city] = groupBy(element, 'time')
+    const date = readingsByCityAndDate[city]
+    readingsByCityAndDate[city] = groupByDate()
   }
   return readingsByCityAndDate
 }

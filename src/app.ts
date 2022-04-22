@@ -29,5 +29,3 @@ export function getTemperatureSummary(
     return null
   }
 }
-
-// console.log(getTemperatureSummary('Utah', new Date('1/2/2021')))

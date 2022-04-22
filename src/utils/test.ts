@@ -68,7 +68,8 @@ export function groupByCity(objectArray: TemperatureReading[]) {
 
 export function groupByDate(objectArray: TemperatureReading[]) {
   return objectArray.reduce(function (accumulator: MyType, object) {
-    const groupingProperty = object.time
+    const formattedTime = object.time.getTime()
+    const groupingProperty = formattedTime
     if (!accumulator[groupingProperty]) {
       accumulator[groupingProperty] = []
     }

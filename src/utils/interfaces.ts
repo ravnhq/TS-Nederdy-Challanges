@@ -1,6 +1,5 @@
-const date: Date = new Date()
 export interface TemperatureReading {
-  time: typeof date
+  time: Date
   temperature: number
   city: string
 }
