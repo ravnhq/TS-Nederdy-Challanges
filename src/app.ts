@@ -26,23 +26,20 @@ export function getTemperatureSummary(
 ): TemperatureSummary | null {
   //add here your code
   const arrayFiltered = example.filter((record) => {
-    return record.time.getTime() === date.getTime() 
-           && record.city === city
+    return record.time.getTime() === date.getTime() && record.city === city
   })
 
   if (arrayFiltered.length > 0) {
-
     const first = arrayFiltered[0].temperature
-    const last  = arrayFiltered[arrayFiltered.length - 1].temperature
+    const last = arrayFiltered[arrayFiltered.length - 1].temperature
     let average = 0
-    let high    = first
-    let low     = first
+    let high = first
+    let low = first
 
     for (const iterator of arrayFiltered) {
-
       if (iterator.temperature > high) high = iterator.temperature
-      if (iterator.temperature < low)  low  = iterator.temperature
-      
+      if (iterator.temperature < low) low = iterator.temperature
+
       average += iterator.temperature
     }
     average /= arrayFiltered.length
@@ -53,7 +50,7 @@ export function getTemperatureSummary(
       high,
       last,
       low,
-    } 
+    }
   }
   return null
 }
