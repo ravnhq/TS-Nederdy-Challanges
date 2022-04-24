@@ -1,79 +1,33 @@
-import { TemperatureReading, TemperatureSummary } from './interfaces'
+import { TemperatureReading } from './interfaces'
 
 export function groupByCity(objectArray: TemperatureReading[]) {
-  return objectArray.reduce(function (accumulator: MyType, object) {
+  return objectArray.reduce(function (
+    accumulator: ReadingsByCityAndDate,
+    object,
+  ) {
     const city = object.city
     if (!accumulator[city]) {
       accumulator[city] = []
     }
     accumulator[city].push(object)
     return accumulator
-  }, {})
+  },
+  {})
 }
 
 export function groupByDate(objectArray: TemperatureReading[]) {
-  return objectArray.reduce(function (accumulator: MyType, object) {
-    const formattedTime = object.time.getTime()
-    const groupingProperty = formattedTime
-    if (!accumulator[groupingProperty]) {
-      accumulator[groupingProperty] = []
+  return objectArray.reduce(function (
+    accumulator: ReadingsByCityAndDate,
+    object,
+  ) {
+    const formattedDate = object.time.getTime()
+    if (!accumulator[formattedDate]) {
+      accumulator[formattedDate] = []
     }
-    accumulator[groupingProperty].push(object)
+    accumulator[formattedDate].push(object)
     return accumulator
-  }, {})
+  },
+  {})
 }
 
-type MyType = { [x: string]: TemperatureReading[] }
-
-let readingsByCityAndDate: MyType
-
-export function storeByCityAndDate(readings: TemperatureReading[]) {
-  readingsByCityAndDate = groupByCity(readings)
-  for (const city in readingsByCityAndDate) {
-    const date = readingsByCityAndDate[city]
-    readingsByCityAndDate[city] = groupByDate(date)
-  }
-  return readingsByCityAndDate
-}
-
-export function processDailyReading() {
-  // FIX: iterating over object and modifying its properties at the same time
-  // Suggestion: create a deep copy of object to use as storage instead
-  let currentCity = ''
-  let currentDate = ''
-  Object.entries(readingsByCityAndDate).forEach(([city, dates]) => {
-    currentCity = city
-    const readings = Object.values(dates) // ['Utah', 'New York']
-    readings.forEach((reading: any) => {
-      currentDate = reading[0].time
-      const temperatureSummary: TemperatureSummary = {
-        first: 0,
-        last: 0,
-        high: 0,
-        low: 0,
-        average: 0,
-      }
-      Object.keys(temperatureSummary).forEach(
-        (value) =>
-          (temperatureSummary[value as keyof typeof temperatureSummary] =
-            reading[0].temperature),
-      )
-      if (reading.length > 1) {
-        temperatureSummary.last = reading[reading.length - 1].temperature
-        let total = 0
-        for (let index = 0; index < reading.length; index++) {
-          const element = reading[index]
-          total += element.temperature
-          if (element.temperature > temperatureSummary.high) {
-            temperatureSummary.high = element.temperature
-          }
-          if (element.temperature < temperatureSummary.low) {
-            temperatureSummary.low = element.temperature
-          }
-          temperatureSummary.average = total / reading.length
-        }
-      }
-      readingsByCityAndDate[currentCity][currentDate] = temperatureSummary
-    })
-  })
-}
+type ReadingsByCityAndDate = { [x: string]: TemperatureReading[] }

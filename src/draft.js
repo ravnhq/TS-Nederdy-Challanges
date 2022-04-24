@@ -1,24 +1,3 @@
-// function groupBy(objectArray, property) {
-//   return objectArray.reduce(function (acc, obj) {
-//     let key = obj[property]
-//     if (!acc[key]) {
-//       acc[key] = []
-//     }
-//     acc[key].push(obj)
-//     return acc
-//   }, {})
-// }
-
-// function storeByCityAndDate(example) {
-//   readingsByCityAndDate = groupBy(example, 'city')
-//   for (const city in readingsByCityAndDate) {
-//     const element = readingsByCityAndDate[city]
-//     readingsByCityAndDate[city] = groupBy(element, 'time')
-//   }
-//   console.log(readingsByCityAndDate)
-//   return readingsByCityAndDate
-// }
-
 const example = [
   {
     time: new Date('1/3/2021'),
@@ -101,7 +80,6 @@ function storeByCityAndDate(readings) {
     const date = readingsByCityAndDate[city]
     readingsByCityAndDate[city] = groupByDate(date)
   }
-  return readingsByCityAndDate
 }
 
 function processDailyReading() {
@@ -164,3 +142,8 @@ function getTemperatureSummary(date, city) {
 }
 
 console.log(getTemperatureSummary(new Date('1/2/2021'), 'Utah'))
+console.log(getTemperatureSummary(new Date('1/3/2021'), 'Utah'))
+console.log(getTemperatureSummary(new Date('3/12/2021'), 'New York'))
+console.log(getTemperatureSummary(new Date('3/13/2021'), 'New York'))
+console.log(getTemperatureSummary(new Date('1/25/2021'), 'Utah'))
+console.log(getTemperatureSummary(new Date('1/25/2021'), 'New York'))
