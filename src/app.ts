@@ -39,6 +39,7 @@ export function getTemperatureSummary(
       acc.last = temperatureReading.temperature
       acc.high = temperatureReading.temperature
       acc.low = temperatureReading.temperature
+
       acc.average = temperatureReading.temperature
       return
     },
