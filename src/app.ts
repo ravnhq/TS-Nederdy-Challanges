@@ -22,31 +22,120 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  console.log(temperatureReadings.length)
-  const specificReadings: TemperatureSummary = temperatureReadings.reduce(
-    // QUESTION: why when I add type TemperatureReading to temperatureReading on the line below, I get a: No overloads matches this call (even though temperatureReadings is already an array of type TemperatureReading)
-    (acc: any, temperatureReading /*:TemperatureReading*/) => {
-      if (date !== temperatureReading.time) {
-        // console.log(`1 ${date} and ${city} got me in here`)
-        return
+  const ZERO_WAITING_ASSIGNATION = 0
+  const filteredReadings: Array<TemperatureReading> =
+    temperatureReadings.filter((temperatureReading) =>
+      isSameDateAndCity(temperatureReading, date, city),
+    )
+  if (filteredReadings.length === 0) return null
+  const temperatureArray: Array<number> = []
+  const temperatureSummary: TemperatureSummary = filteredReadings.reduce(
+    (
+      acc: TemperatureSummary,
+      temperatureReading: TemperatureReading,
+      index: number,
+    ) => {
+      temperatureArray.push(temperatureReading.temperature)
+      if (index === 0) {
+        acc.high = temperatureReading.temperature
+        acc.first = temperatureReading.temperature
+        acc.last = temperatureReading.temperature
+        acc.high = temperatureReading.temperature
+        acc.low = temperatureReading.temperature
       }
-      if (city !== temperatureReading.city) {
-        // console.log(`2 ${date} and ${city} got me in here`)
-        return
+      if (index === filteredReadings.length - 1) {
+        acc.last = temperatureReading.temperature
+        console.log(temperatureArray.length)
+        acc.average =
+          temperatureArray.reduce((acc, elm) => acc + elm, 0) /
+          temperatureArray.length
       }
       if (temperatureReading.temperature > acc.high)
         acc.high = temperatureReading.temperature
-      acc.first = temperatureReading.temperature
-      acc.last = temperatureReading.temperature
-      acc.high = temperatureReading.temperature
-      acc.low = temperatureReading.temperature
 
-      acc.average = temperatureReading.temperature
-      return
+      if (temperatureReading.temperature < acc.low)
+        acc.low = temperatureReading.temperature
+
+      return acc
     },
-    { first: null, last: null, high: null, low: null, average: null },
+    {
+      first: ZERO_WAITING_ASSIGNATION,
+      last: ZERO_WAITING_ASSIGNATION,
+      high: ZERO_WAITING_ASSIGNATION,
+      low: ZERO_WAITING_ASSIGNATION,
+      average: ZERO_WAITING_ASSIGNATION,
+    },
   )
-  console.log(specificReadings)
 
-  return specificReadings
+  return temperatureSummary
+  function isSameDateAndCity(
+    temperatureReading: TemperatureReading,
+    date: Date,
+    city: string,
+  ): true | false {
+    if (temperatureReading.city !== city) return false
+    if (temperatureReading.time.getTime() !== date.getTime()) return false
+    return true
+  }
 }
+/* stuff to be deleted*/
+const example = [
+  {
+    time: new Date('1/3/2021'),
+    temperature: 8,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 10,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 9,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 12,
+    city: 'Utah',
+  },
+  {
+    time: new Date('1/2/2021'),
+    temperature: 11,
+    city: 'Utah',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 15,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 10,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 11,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/12/2021'),
+    temperature: 9,
+    city: 'New York',
+  },
+  {
+    time: new Date('3/13/2021'),
+    temperature: 16,
+    city: 'New York',
+  },
+]
+processReadings(example)
+const result = getTemperatureSummary(new Date('3/12/2021'), 'Texas')
+// const result = getTemperatureSummary(new Date('1/2/2021'), 'Utah')
+// const result = getTemperatureSummary(new Date('3/12/2021'), 'New York')
+console.log('result')
+console.log(result)
+
+/** */
