@@ -22,9 +22,9 @@ export function getTemperatureSummary(
   date: Date,
   city: string,
 ): TemperatureSummary | null {
-  // verify if same city first
+  console.log(temperatureReadings.length)
   const specificReadings: TemperatureSummary = temperatureReadings.reduce(
-    // QUESTION: why when I add type TemperatureReading to temperatureReading on the line below, I get a: No overloads matches this call (even though temperatureReadings is an array of type TemperatureReading)
+    // QUESTION: why when I add type TemperatureReading to temperatureReading on the line below, I get a: No overloads matches this call (even though temperatureReadings is already an array of type TemperatureReading)
     (acc: any, temperatureReading /*:TemperatureReading*/) => {
       if (date !== temperatureReading.time) {
         // console.log(`1 ${date} and ${city} got me in here`)
@@ -34,7 +34,8 @@ export function getTemperatureSummary(
         // console.log(`2 ${date} and ${city} got me in here`)
         return
       }
-
+      if (temperatureReading.temperature > acc.high)
+        acc.high = temperatureReading.temperature
       acc.first = temperatureReading.temperature
       acc.last = temperatureReading.temperature
       acc.high = temperatureReading.temperature
