@@ -25,5 +25,14 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   //add here your code
+
+  const temperatures: number[] = valuesTemp
+    .filter(
+      (localTime) =>
+        localTime.city === city &&
+        localTime.time.toString() === date.toString(),
+    )
+    .map((localTime) => localTime.temperature)
+
   return null
 }
