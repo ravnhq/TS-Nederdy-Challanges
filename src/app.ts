@@ -13,8 +13,11 @@ interface TemperatureSummary {
   average: number
 }
 
+let valuesTemp: TemperatureReading[]
+
 export function processReadings(readings: TemperatureReading[]): void {
   // add here your code
+  valuesTemp = readings
 }
 
 export function getTemperatureSummary(
