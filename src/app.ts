@@ -34,5 +34,19 @@ export function getTemperatureSummary(
     )
     .map((localTime) => localTime.temperature)
 
+  if (temperatures.length > 0) {
+    const temperatureObj: TemperatureSummary = {
+      first: temperatures[0],
+      last: temperatures[temperatures.length - 1],
+      high: Math.max(...temperatures),
+      low: Math.min(...temperatures),
+      average:
+        temperatures.reduce((total, value) => total + value) /
+        temperatures.length,
+    }
+
+    return temperatureObj
+  }
+
   return null
 }
