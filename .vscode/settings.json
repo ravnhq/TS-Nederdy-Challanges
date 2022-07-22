@@ -1,0 +1,7 @@
+{
+    "editor.fontWeight": "100",
+    "editor.fontLigatures": true,
+    "workbench.colorTheme": "Operator Mono Dark Theme",
+    "editor.formatOnSave": true,
+    "editor.codeLensFontFamily": "Operator Mono Lig"
+}
