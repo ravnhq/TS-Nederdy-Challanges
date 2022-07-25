@@ -31,31 +31,31 @@ export function getTemperatureSummary(
   const temperatureArray: Array<number> = []
   const temperatureSummary: TemperatureSummary = filteredReadings.reduce(
     (
-      acc: TemperatureSummary,
+      accumulator: TemperatureSummary,
       temperatureReading: TemperatureReading,
       index: number,
     ) => {
       temperatureArray.push(temperatureReading.temperature)
       if (index === 0) {
-        acc.high = temperatureReading.temperature
-        acc.first = temperatureReading.temperature
-        acc.last = temperatureReading.temperature
-        acc.high = temperatureReading.temperature
-        acc.low = temperatureReading.temperature
+        accumulator.high = temperatureReading.temperature
+        accumulator.first = temperatureReading.temperature
+        accumulator.last = temperatureReading.temperature
+        accumulator.high = temperatureReading.temperature
+        accumulator.low = temperatureReading.temperature
       }
       if (index === filteredReadings.length - 1) {
-        acc.last = temperatureReading.temperature
-        acc.average =
+        accumulator.last = temperatureReading.temperature
+        accumulator.average =
           temperatureArray.reduce((acc, elm) => acc + elm, 0) /
           temperatureArray.length
       }
-      if (temperatureReading.temperature > acc.high)
-        acc.high = temperatureReading.temperature
+      if (temperatureReading.temperature > accumulator.high)
+        accumulator.high = temperatureReading.temperature
 
-      if (temperatureReading.temperature < acc.low)
-        acc.low = temperatureReading.temperature
+      if (temperatureReading.temperature < accumulator.low)
+        accumulator.low = temperatureReading.temperature
 
-      return acc
+      return accumulator
     },
     {
       first: ZERO_WAITING_ASSIGNATION,
