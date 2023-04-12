@@ -16,27 +16,7 @@ interface TemperatureSummary {
 let readingsGlobal: TemperatureReading[]
 export function processReadings(readings: TemperatureReading[]): void {
   // add here your code
-  // const reduceFunction = (
-  //   accu: { [index: string]: TemperatureReading[] },
-  //   curr: TemperatureReading,
-  // ) => {
-  //   const res = [...(accu[curr.city] ?? []), curr]
-  //   return { ...accu, [curr.city]: res }
-  // }
 
-  // const reduceFunction2 = (
-  //   accu: { [index: string]: TemperatureReading[] },
-  //   curr: TemperatureReading,
-  // ) => {
-  //   if (!accu[curr.city]) {
-  //     return { ...accu, [curr.city]: [curr] }
-  //   }
-  //   return { ...accu, [curr.city]: [...accu[curr.city], curr] }
-  // }
-  // const grouped = readings.reduce<{ [index: string]: TemperatureReading[] }>(
-  //   reduceFunction2,
-  //   Object.create(null),
-  // )
   readingsGlobal = readings
   return
 }
@@ -45,10 +25,6 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   //add here your code
-  //let filter = readingsGlobal.filter((data) => data.city === city)
-  // let filter2 = readingsGlobal.filter(
-  //   (data) => data.time.getTime() === date.getTime(),
-  // )
   const filter = readingsGlobal.filter(
     (data) => data.city === city && data.time.getTime() === date.getTime(),
   )
