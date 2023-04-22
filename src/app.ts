@@ -25,25 +25,26 @@ export function getTemperatureSummary(
   city: string,
 ): TemperatureSummary | null {
   //add here your code
-  const filter = readingsGlobal.filter(
+  const filteredReadings = readingsGlobal.filter(
     (data) => data.city === city && data.time.getTime() === date.getTime(),
   )
-  if (filter.length < 1) {
+  if (!filteredReadings.length) {
     return null
   }
-  const TemperatureSummary = {
-    first: filter[0].temperature,
-    last: filter.slice(-1)[0].temperature,
-    high: filter.reduce(
+  const temperatureSummary = {
+    first: filteredReadings[0].temperature,
+    last: filteredReadings.slice(-1)[0].temperature,
+    high: filteredReadings.reduce(
       (accu, curr) => Math.max(accu, curr.temperature),
       -Infinity,
     ),
-    low: filter.reduce(
+    low: filteredReadings.reduce(
       (accu, curr) => Math.min(accu, curr.temperature),
       Infinity,
     ),
     average:
-      filter.reduce((accu, curr) => accu + curr.temperature, 0) / filter.length,
+      filteredReadings.reduce((accu, curr) => accu + curr.temperature, 0) /
+      filteredReadings.length,
   }
-  return TemperatureSummary
+  return temperatureSummary
 }
