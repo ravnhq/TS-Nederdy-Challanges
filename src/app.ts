@@ -25,7 +25,10 @@ export function getTemperatureSummary(
   const foundCity = temperatureData.find(
     (item: TemperatureReading) => item.city === city,
   )
-  if (foundCity === undefined) return null
+
+  if (!foundCity) {
+    return null
+  }
 
   const cityTemperatureReadings: TemperatureReading[] = temperatureData.filter(
     (item: TemperatureReading) =>
@@ -35,20 +38,20 @@ export function getTemperatureSummary(
     (item: TemperatureReading) => item.temperature,
   )
 
-  const firstTemp: number = cityTemperatures[0]
-  const lastTemp: number = cityTemperatures.slice(-1)[0]
-  const highTemp: number = Math.max(...cityTemperatures)
-  const lowTemp: number = Math.min(...cityTemperatures)
-  const averageTemp: number =
+  const first: number = cityTemperatures[0]
+  const last: number = cityTemperatures.slice(-1)[0]
+  const high: number = Math.max(...cityTemperatures)
+  const low: number = Math.min(...cityTemperatures)
+  const average: number =
     cityTemperatures.reduce(
       (total: number, temperature: number) => total + temperature,
     ) / cityTemperatures.length
 
   return {
-    first: firstTemp,
-    last: lastTemp,
-    high: highTemp,
-    low: lowTemp,
-    average: averageTemp,
+    first,
+    last,
+    high,
+    low,
+    average,
   }
 }
